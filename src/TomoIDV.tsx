@@ -1,5 +1,6 @@
 import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 
+
 interface TomoIDVClientProps { 
   connection_status: ConnectionStatus;
   session_id: string | null;
@@ -64,19 +65,19 @@ export default function TomoIDVClient({ connection_status, session_id }: TomoIDV
         <button 
           onClick={() => {
             console.log(session_id);
-            fetch('http://localhost:3000/verify/session', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ session_id })
+            fetch("http://localhost:3000/verify/session", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ session_id })
             })
             .then(res => res.json())
             .then(data => {
-              console.log(data);
+                console.log(data);
             })
             .catch(err => {
-              console.error(err);
+                console.error(err);
             });
           }}
           disabled={!session_id}
@@ -98,21 +99,21 @@ export default function TomoIDVClient({ connection_status, session_id }: TomoIDV
         </p>
         <button 
           onClick={() => {
-            console.log(session_id);
-            fetch('http://localhost:3000/results', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ session_id })
-            })
-            .then(res => res.json())
-            .then(data => {
-              console.log(data);
-            })
-            .catch(err => {
-              console.error(err);
-            });
+              console.log(session_id);
+              fetch("http://localhost:3000/results", {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ session_id })
+              })
+                  .then(res => res.json())
+                  .then(data => {
+                      console.log(data);
+                  })
+                  .catch(err => {
+                      console.error(err);
+                  });
           }}
           disabled={!session_id}
           className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
