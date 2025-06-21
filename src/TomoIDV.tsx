@@ -65,7 +65,7 @@ export default function TomoIDVClient({ connection_status, session_id }: TomoIDV
         <button 
           onClick={() => {
             console.log(session_id);
-            fetch("http://localhost:3000/verify/session", {
+            fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/verify/session", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ export default function TomoIDVClient({ connection_status, session_id }: TomoIDV
         <button 
           onClick={() => {
               console.log(session_id);
-              fetch("http://localhost:3000/results", {
+              fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/results", {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'
