@@ -1,5 +1,6 @@
 import './App.css';
-import { ConnectionStatus, SessionWebHook } from 'tomo-idv-client';
+// import { ConnectionStatus, SessionWebHook } from 'tomo-idv-client';
+import { ConnectionStatus, SessionWebHook } from './modules/tomo-idv-client';
 import TomoIDVClient from './TomoIDV';
 
 

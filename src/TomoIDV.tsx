@@ -1,4 +1,5 @@
-import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
+// import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
+import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
 
 
 interface TomoIDVClientProps { 
