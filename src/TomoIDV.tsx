@@ -1,13 +1,16 @@
 // import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
+import { useState } from 'react';
 import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
 
 
 interface TomoIDVClientProps { 
-  connection_status: ConnectionStatus;
-  session_id: string | null;
+  // connection_status: ConnectionStatus;
+  // session_id: string | null;
 }
 
-export default function TomoIDVClient({ connection_status, session_id }: TomoIDVClientProps) {
+export default function TomoIDVClient() {
+  const [session_id, setSessionId] = useState<string | null>(null);
+  const [connection_status, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
       <h1 className="text-2xl font-bold text-center mb-8">TomoIDV Quick Start Guide</h1>
@@ -18,7 +21,7 @@ export default function TomoIDVClient({ connection_status, session_id }: TomoIDV
         <p className="text-gray-600 mb-4">
           로그인 버튼을 클릭하여 인증 절차를 시작합니다.
         </p>
-        <Signin
+        <Signin setConnectionStatus={setConnectionStatus} setSessionId={setSessionId}
           className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none transition duration-150"
           label='로그인'
         />
