@@ -173,7 +173,7 @@ const Signin = ({ className = '', label = 'Tomo Signin', setConnectionStatus, se
         }
     };
 
-    const openPopup = (client_id: string) => {
+    const openPopup = (conn_id: string) => {
         const width = 500;
         const height = 600;
         const left = window.screenX + (window.outerWidth - width) / 2;
@@ -181,7 +181,7 @@ const Signin = ({ className = '', label = 'Tomo Signin', setConnectionStatus, se
 
         // client_id를 쿼리 스트링으로 추가
         const url = new URL(config.tomoIdvUrl);
-        url.searchParams.set('client_id', client_id);
+        url.searchParams.set('conn_id', conn_id);
 
         // 팝업 창 열기
         window.open(
