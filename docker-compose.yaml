@@ -1,0 +1,21 @@
+services:
+  demo:
+    image: node:20-alpine
+
+    tty: true
+    stdin_open: true
+
+    volumes:
+      - ./:/app
+
+    working_dir: /app
+    entrypoint: sh
+
+
+    ports:
+      - 3002:3000
+      - 3003:3003
+
+
+    env_file:
+      - local.env
