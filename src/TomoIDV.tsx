@@ -1,6 +1,7 @@
 // import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 import { useState } from 'react';
 import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
+import { config } from './modules/ClientEnv';
 
 
 interface TomoIDVClientProps { 
@@ -69,7 +70,8 @@ export default function TomoIDVClient() {
         <button 
           onClick={() => {
             console.log(session_id);
-            fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/verify/session", {
+            fetch(config.verifySessionEndpoint, {
+            // fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/verify/session", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -104,7 +106,8 @@ export default function TomoIDVClient() {
         <button 
           onClick={() => {
               console.log(session_id);
-              fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/results", {
+              // fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/results", {
+              fetch(config.resultsEndpoint, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'

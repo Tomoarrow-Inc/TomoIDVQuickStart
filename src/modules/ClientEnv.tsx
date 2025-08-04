@@ -6,6 +6,8 @@ interface Config {
     tomoIdvAppUrl: string; // 추가된 속성
     storeKycEndpoint: string;
     generateLinkTokenEndpoint: string;
+    verifySessionEndpoint: string;
+    resultsEndpoint: string;
   }
   
   const validateEnvironmentVariables = (): Config => {
@@ -15,6 +17,8 @@ interface Config {
       tomoIdvAppUrl: process.env.REACT_APP_TOMO_IDV_APP_URL,
       storeKycEndpoint: process.env.REACT_APP_STORE_KYC_ENDPOINT,
       generateLinkTokenEndpoint: process.env.REACT_APP_GENERATE_LINK_TOKEN_ENDPOINT,
+      verifySessionEndpoint: process.env.REACT_APP_API_VERFY_SESSION,
+      resultsEndpoint: process.env.REACT_APP_API_GET_KYC,
     };
   
     const missingVars = Object.entries(requiredEnvVars)
