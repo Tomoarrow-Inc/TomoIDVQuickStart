@@ -97,9 +97,44 @@ export default function TomoIDVClient() {
         </button>
       </div>
 
-      {/* Step 5: KYC Information */}
+      {/* Step 5: KYC Store */}
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 5: KYC 정보 조회</h2>
+        <h2 className="text-lg font-semibold mb-2">Step 5: KYC 저장</h2>
+        <p className="text-gray-600 mb-4">
+          고객의 KYC 정보를 저장소에 저장합니다.
+        </p>
+        <button 
+          onClick={() => {
+            console.log(session_id);
+            fetch(config.storeJpKycEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ session_id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+          }}
+          disabled={!session_id}
+          className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
+            session_id 
+              ? 'bg-orange-600 hover:bg-orange-700 cursor-pointer' 
+              : 'bg-gray-400 cursor-not-allowed'
+          }`}
+        >
+          KYC 저장
+        </button>
+      </div>
+
+      {/* Step 6: KYC Information */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold mb-2">Step 6: KYC 정보 조회</h2>
         <p className="text-gray-600 mb-4">
           고객의 KYC 정보를 조회합니다. Production 환경에서는 보안을 위해 Hash 값으로 제공됩니다.
         </p>

@@ -5,6 +5,7 @@ interface Config {
     tomoIdvUrl: string;
     tomoIdvAppUrl: string;
     storeKycEndpoint: string;
+    storeJpKycEndpoint: string;
     generateLinkTokenEndpoint: string;
     verifySessionEndpoint: string;
     resultsEndpoint: string;
