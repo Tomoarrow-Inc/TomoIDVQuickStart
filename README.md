@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Environment Configuration
 
-This project supports three environments with different configuration strategies:
+This project supports three environments with internal configuration management:
 
 ### Environment Types
 
@@ -19,9 +19,9 @@ This project supports three environments with different configuration strategies
    - Test environment settings
 
 3. **Production** (`REACT_APP_ENV` not set or any other value)
-   - Uses external environment variables only
+   - Uses internal configuration in `ClientEnv.tsx`
    - HTTPS endpoints required
-   - Strict security validation
+   - Production environment settings
 
 ### Running in Different Environments
 
@@ -34,7 +34,7 @@ npm run start:dev
 REACT_APP_ENV=development npm start
 
 # Using Docker
-docker-compose up  # Uses local.env by default
+docker-compose up  # Uses .env by default
 ```
 
 #### Test Environment
@@ -46,8 +46,7 @@ npm run start:test
 REACT_APP_ENV=test npm start
 
 # Using Docker (modify docker-compose.yaml)
-# Change env_file to: - test.env
-# Change environment to: - REACT_APP_ENV=test
+# Change env_file to: - .env
 ```
 
 #### Production Environment
@@ -56,8 +55,7 @@ REACT_APP_ENV=test npm start
 npm run start:prod
 
 # Using Docker (modify docker-compose.yaml)
-# Change env_file to: - prod.env
-# Remove or comment out REACT_APP_ENV environment variable
+# Change env_file to: - .env
 ```
 
 ### Docker Configuration
@@ -66,22 +64,19 @@ Edit `docker-compose.yaml` to switch environments:
 
 ```yaml
 env_file:
-  # Development (internal config)
-  - local.env
-  
-  # Test (internal config)
-  # - test.env
-  
-  # Production (external env vars)
-  # - prod.env
-
-environment:
-  # Development/Test: Set environment type
-  - REACT_APP_ENV=development
-  
-  # Production: Remove this line (defaults to production)
-  # - REACT_APP_ENV=production
+  # development, test, production in .env file
+  - .env
 ```
+
+### Environment Files
+
+The project includes environment-specific files for Docker deployment:
+
+- `.env` - Sets `REACT_APP_ENV=development`
+- `.env` - Sets `REACT_APP_ENV=test`  
+- `.env` - No `REACT_APP_ENV` set (defaults to production)
+
+**Note**: For npm users, no environment files are required. The application will default to production mode unless `REACT_APP_ENV` is explicitly set.
 
 ## Available Scripts
 

@@ -81,32 +81,7 @@ const getEnvironmentConfig = (): Config => {
 };
 
 const validateEnvironmentVariables = (): Config => {
-    const environment = getEnvironment();
-    
-    if (environment === 'production') {
-        // 프로덕션 환경에서만 외부 환경 변수 검증
-        const requiredEnvVars = {
-            webhookUrl: process.env.REACT_APP_WEBHOOK_URL,
-            tomoIdvUrl: process.env.REACT_APP_TOMO_IDV_URL,
-            tomoIdvAppUrl: process.env.REACT_APP_TOMO_IDV_APP_URL,
-            storeKycEndpoint: process.env.REACT_APP_STORE_KYC_ENDPOINT,
-            generateLinkTokenEndpoint: process.env.REACT_APP_GENERATE_LINK_TOKEN_ENDPOINT,
-            verifySessionEndpoint: process.env.REACT_APP_API_VERFY_SESSION,
-            resultsEndpoint: process.env.REACT_APP_API_GET_KYC,
-        };
-        
-        const missingVars = Object.entries(requiredEnvVars)
-            .filter(([_, value]) => !value)
-            .map(([key]) => key);
-        
-        if (missingVars.length > 0) {
-            throw new Error(
-                `Production environment missing required variables: ${missingVars.join(', ')}\n` +
-                'Please ensure all REACT_APP_* environment variables are set.'
-            );
-        }
-    }
-    
+    // 모든 환경이 내부 설정을 사용하므로 환경 변수 검증 불필요
     return getEnvironmentConfig();
 };
 
