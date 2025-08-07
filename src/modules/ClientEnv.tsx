@@ -13,12 +13,12 @@ interface Config {
 
 // 환경 감지 함수 개선
 export const getEnvironment = (): 'development' | 'test' | 'production' => {
-    const env = process.env.REACT_APP_ENV?.toLowerCase();
+    const env = process.env.REACT_APP_TOMO_IDV_ENV?.toLowerCase();
     
     if (env === 'development' || env === 'dev') return 'development';
     if (env === 'test') return 'test';
     
-    // REACT_APP_ENV가 없거나 다른 값이면 production으로 처리
+    // REACT_APP_TOMO_IDV_ENV가 없거나 다른 값이면 production으로 처리
     return 'production';
 };
 
