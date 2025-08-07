@@ -11,15 +11,9 @@ services:
     working_dir: /app
     entrypoint: sh
 
-
     ports:
       - 3002:3000
       - 3003:3003
 
-
     env_file:
-      # - test-proxy.env
-      # - local-proxy.env
-      # - local.env
-      # - test.env
-      - test-merge-idv-app-0807.env
+      - .env
