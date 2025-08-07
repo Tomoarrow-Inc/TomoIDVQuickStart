@@ -43,25 +43,25 @@ const getEnvironmentConfig = (): Config => {
         case 'development':
             return {
                 // NOTE : port 80 이 idv-server
-                webhookUrl: 'http://localhost:80/webhook/session',
+                webhookUrl: 'http://localhost:80/v1/webhook/session',
                 tomoIdvUrl: 'http://localhost:8080/auth/tomo-idv',
                 tomoIdvAppUrl: 'http://localhost:8080/idv',
-                storeKycEndpoint: 'http://localhost:80/us/store',
-                generateLinkTokenEndpoint: 'http://localhost:80/us/generate_link_token',
-                verifySessionEndpoint: 'http://localhost:80/verify/session',
-                resultsEndpoint: 'http://localhost:80/results',
+                storeKycEndpoint: 'http://localhost:80/v1/us/store',
+                generateLinkTokenEndpoint: 'http://localhost:80/v1/us/generate_link_token',
+                verifySessionEndpoint: 'http://localhost:80/v1/verify/session',
+                resultsEndpoint: 'http://localhost:80/v1/results',
                 environment: 'development'
             };
             
         case 'test':
             return {
-                webhookUrl: 'https://test.tomopayment.com/webhook/session',
+                webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
                 tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
                 tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
-                storeKycEndpoint: 'https://test.tomopayment.com/us/store',
-                generateLinkTokenEndpoint: 'https://test.tomopayment.com/us/generate_link_token',
-                verifySessionEndpoint: 'https://test.tomopayment.com/verify/session',
-                resultsEndpoint: 'https://test.tomopayment.com/results',
+                storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
+                generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
+                verifySessionEndpoint: 'https://test.tomopayment.com/v1/verify/session',
+                resultsEndpoint: 'https://test.tomopayment.com/v1/results',
                 environment: 'test'
             };
             
