@@ -15,8 +15,9 @@ services:
       - 3002:3000
       - 3003:3003
 
-    env_file:
-      - .env.local
+    # env_file:
+    #   - .env.test
+      # - .env.local
       # - test-proxy-port-swap.env
       # - local-proxy-port-swap.env
       # - test-proxy.env
