@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 interface Config {
     webhookUrl: string;
     tomoIdvUrl: string;
-    tomoIdvAppUrl: string; // 추가된 속성
+    tomoIdvAppUrl: string;
     storeKycEndpoint: string;
     generateLinkTokenEndpoint: string;
     verifySessionEndpoint: string;
@@ -11,7 +11,7 @@ interface Config {
     environment: 'development' | 'test' | 'production';
 }
 
-// 환경 감지 함수 개선
+// 환경 감지 함수
 export const getEnvironment = (): 'development' | 'test' | 'production' => {
     const env = process.env.REACT_APP_TOMO_IDV_ENV?.toLowerCase();
     
@@ -80,7 +80,6 @@ const getEnvironmentConfig = (): Config => {
 };
 
 const validateEnvironmentVariables = (): Config => {
-    // 모든 환경이 내부 설정을 사용하므로 환경 변수 검증 불필요
     return getEnvironmentConfig();
 };
 

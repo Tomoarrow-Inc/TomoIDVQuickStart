@@ -8,11 +8,6 @@ interface SessionWebHookProps {
                 onSessionOpened?: (session_id: string) => void;
 }
 
-// 환경변수 확인 함수 - ClientEnv에서 import하므로 제거
-// const isDevelopment = (): boolean => {
-//     return process.env.REACT_APP_ENV === 'development';
-// };
-
 // TLS 버전 및 보안 검증을 위한 유틸리티 함수 (환경에 따라 분기)
 const validateSecureConnection = async (url: string): Promise<{ isSecure: boolean; tlsInfo?: string }> => {
     try {
