@@ -1,7 +1,7 @@
 // import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 import { useState } from 'react';
 import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
-import { config } from './modules/ClientEnv';
+import { getApiEndpoints, getCurrentApiEnvironment } from './ApiConfig';
 
 
 interface TomoIDVClientProps { 
@@ -12,6 +12,11 @@ interface TomoIDVClientProps {
 export default function TomoIDVClient() {
   const [session_id, setSessionId] = useState<string | null>(null);
   const [connection_status, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
+  
+  // API 설정 가져오기
+  const apiEndpoints = getApiEndpoints();
+  const currentEnvironment = getCurrentApiEnvironment();
+  
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
       <h1 className="text-2xl font-bold text-center mb-8">TomoIDV Quick Start Guide</h1>
@@ -67,11 +72,17 @@ export default function TomoIDVClient() {
         <p className="text-gray-600 mb-4">
           현재 세션이 유효한지 확인합니다.
         </p>
+        <div className="mb-4 p-3 bg-gray-100 rounded text-sm">
+          <strong>Environment:</strong> {currentEnvironment} | 
+          <strong>Endpoint:</strong> {apiEndpoints.verifySessionEndpoint}
+        </div>
         <button 
           onClick={() => {
-            console.log(session_id);
-            fetch(config.verifySessionEndpoint, {
-            // fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/verify/session", {
+            console.log('Session ID:', session_id);
+            console.log('Environment:', currentEnvironment);
+            console.log('Verify Session Endpoint:', apiEndpoints.verifySessionEndpoint);
+            
+            fetch(apiEndpoints.verifySessionEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,11 +149,17 @@ export default function TomoIDVClient() {
         <p className="text-gray-600 mb-4">
           고객의 KYC 정보를 조회합니다. Production 환경에서는 보안을 위해 Hash 값으로 제공됩니다.
         </p>
+        <div className="mb-4 p-3 bg-gray-100 rounded text-sm">
+          <strong>Environment:</strong> {currentEnvironment} | 
+          <strong>Endpoint:</strong> {apiEndpoints.resultsEndpoint}
+        </div>
         <button 
           onClick={() => {
-              console.log(session_id);
-              // fetch("http://ec2-3-34-173-204.ap-northeast-2.compute.amazonaws.com:3000/results", {
-              fetch(config.resultsEndpoint, {
+              console.log('Session ID:', session_id);
+              console.log('Environment:', currentEnvironment);
+              console.log('Results Endpoint:', apiEndpoints.resultsEndpoint);
+              
+              fetch(apiEndpoints.resultsEndpoint, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'

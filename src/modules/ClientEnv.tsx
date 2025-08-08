@@ -7,8 +7,6 @@ interface Config {
     storeKycEndpoint: string;
     storeJpKycEndpoint: string;
     generateLinkTokenEndpoint: string;
-    verifySessionEndpoint: string;
-    resultsEndpoint: string;
     environment: 'development' | 'test' | 'production';
 }
 
@@ -49,8 +47,6 @@ const getEnvironmentConfig = (): Config => {
                 storeKycEndpoint: 'http://localhost:80/v1/us/store',
                 storeJpKycEndpoint: 'http://localhost:80/v1/jp/store',
                 generateLinkTokenEndpoint: 'http://localhost:80/v1/us/generate_link_token',
-                verifySessionEndpoint: 'http://localhost:80/v1/verify/session',
-                resultsEndpoint: 'http://localhost:80/v1/results',
                 environment: 'development'
             };
             
@@ -62,8 +58,6 @@ const getEnvironmentConfig = (): Config => {
                 storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
                 storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
                 generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
-                verifySessionEndpoint: 'https://test.tomopayment.com/v1/verify/session',
-                resultsEndpoint: 'https://test.tomopayment.com/v1/results',
                 environment: 'test'
             };
             
@@ -74,9 +68,7 @@ const getEnvironmentConfig = (): Config => {
                 tomoIdvAppUrl: 'https://app.tomopayment.com/idv',
                 storeKycEndpoint: 'https://api.tomopayment.com/v1/us/store',
                 storeJpKycEndpoint: 'https://api.tomopayment.com/v1/jp/store',
-                generateLinkTokenEndpoint: 'https://api.tomopayment.com/v1/us/generate_link_token',
-                verifySessionEndpoint: 'https://api.tomopayment.com/v1/verify/session',
-                resultsEndpoint: 'https://api.tomopayment.com/v1/results',
+                generateLinkTokenEndpoint: 'https://api.tomopayment.com/v1/us/generate_link_token',             
                 environment: 'production'
             };
     }
