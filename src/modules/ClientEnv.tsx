@@ -67,13 +67,13 @@ const getEnvironmentConfig = (): Config => {
             
         case 'production':
             return {
-                webhookUrl: 'https://api.tomopayment.com/webhook/session',
+                webhookUrl: 'https://api.tomopayment.com/v1/webhook/session',
                 tomoIdvUrl: 'https://app.tomopayment.com/auth/tomo-idv',
                 tomoIdvAppUrl: 'https://app.tomopayment.com/idv',
-                storeKycEndpoint: 'https://api.tomopayment.com/us/store',
-                generateLinkTokenEndpoint: 'https://api.tomopayment.com/us/generate_link_token',
-                verifySessionEndpoint: 'https://api.tomopayment.com/verify/session',
-                resultsEndpoint: 'https://api.tomopayment.com/results',
+                storeKycEndpoint: 'https://api.tomopayment.com/v1/us/store',
+                generateLinkTokenEndpoint: 'https://api.tomopayment.com/v1/us/generate_link_token',
+                verifySessionEndpoint: 'https://api.tomopayment.com/v1/verify/session',
+                resultsEndpoint: 'https://api.tomopayment.com/v1/results',
                 environment: 'production'
             };
     }
