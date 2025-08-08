@@ -66,11 +66,10 @@ const getEnvironmentConfig = (): Config => {
             };
             
         case 'production':
-            // tomoIdvUrl, tomoIdvAppUrl 을 prod CF 도메인으로 바꿔야함. (CF도 만들어야함)
             return {
                 webhookUrl: 'https://api.tomopayment.com/webhook/session',
-                tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
-                tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
+                tomoIdvUrl: 'https://app.tomopayment.com/auth/tomo-idv',
+                tomoIdvAppUrl: 'https://app.tomopayment.com/idv',
                 storeKycEndpoint: 'https://api.tomopayment.com/us/store',
                 generateLinkTokenEndpoint: 'https://api.tomopayment.com/us/generate_link_token',
                 verifySessionEndpoint: 'https://api.tomopayment.com/verify/session',
