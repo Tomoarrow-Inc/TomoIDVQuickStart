@@ -42,7 +42,6 @@ const getEnvironmentConfig = (): Config => {
     switch (environment) {
         case 'development':
             return {
-                // NOTE : port 80 이 idv-server
                 webhookUrl: 'http://localhost:80/v1/webhook/session',
                 tomoIdvUrl: 'http://localhost:8080/auth/tomo-idv',
                 tomoIdvAppUrl: 'http://localhost:8080/idv',
