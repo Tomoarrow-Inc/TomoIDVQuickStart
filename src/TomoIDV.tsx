@@ -72,16 +72,8 @@ export default function TomoIDVClient() {
         <p className="text-gray-600 mb-4">
           현재 세션이 유효한지 확인합니다.
         </p>
-        <div className="mb-4 p-3 bg-gray-100 rounded text-sm">
-          <strong>Environment:</strong> {currentEnvironment} | 
-          <strong>Endpoint:</strong> {apiEndpoints.verifySessionEndpoint}
-        </div>
         <button 
           onClick={() => {
-            console.log('Session ID:', session_id);
-            console.log('Environment:', currentEnvironment);
-            console.log('Verify Session Endpoint:', apiEndpoints.verifySessionEndpoint);
-            
             fetch(apiEndpoints.verifySessionEndpoint, {
                 method: 'POST',
                 headers: {
@@ -149,16 +141,8 @@ export default function TomoIDVClient() {
         <p className="text-gray-600 mb-4">
           고객의 KYC 정보를 조회합니다. Production 환경에서는 보안을 위해 Hash 값으로 제공됩니다.
         </p>
-        <div className="mb-4 p-3 bg-gray-100 rounded text-sm">
-          <strong>Environment:</strong> {currentEnvironment} | 
-          <strong>Endpoint:</strong> {apiEndpoints.resultsEndpoint}
-        </div>
         <button 
-          onClick={() => {
-              console.log('Session ID:', session_id);
-              console.log('Environment:', currentEnvironment);
-              console.log('Results Endpoint:', apiEndpoints.resultsEndpoint);
-              
+          onClick={() => {              
               fetch(apiEndpoints.resultsEndpoint, {
                   method: 'POST',
                   headers: {
