@@ -1,6 +1,6 @@
 import './App.css';
-// import { ConnectionStatus, SessionWebHook } from 'tomo-idv-client';
-import { ConnectionStatus, SessionWebHook } from './modules/tomo-idv-client';
+// import { ConnectionStatus } from 'tomo-idv-client';
+import { ConnectionStatus } from './modules/tomo-idv-client';
 import TomoIDVClient from './TomoIDV';
 
 
@@ -17,9 +17,6 @@ function App() {
       <header className="App-header">
         <div className="flex space-x-4 items-center">
           <div>
-            {/* <SessionWebHook >
-              { webhookHelper }
-            </SessionWebHook> */}
             <TomoIDVClient />
           </div>
         </div>
