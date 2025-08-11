@@ -1,5 +1,5 @@
 import './App.css';
-import TomoIDVClient from './TomoIDV';
+import Home from './Home';
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <div className="flex space-x-4 items-center">
           <div>
-            <TomoIDVClient />
+            <Home />
           </div>
         </div>
       </header>
