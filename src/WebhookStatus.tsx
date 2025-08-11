@@ -1,4 +1,3 @@
-// import { ConnectionStatus } from "./modules/types/connectionStatus";
 import { ConnectionStatus } from "./modules/tomo-idv-client";
 
 interface WebhookStatusProps {
