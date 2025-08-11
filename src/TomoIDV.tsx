@@ -1,113 +1,230 @@
 import { useState } from 'react';
-import Signin from './Signin';
-import StartTomoIDV from './StartTomoIDV';
-import WebhookStatus from './WebhookStatus';
-
-
-// import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
-
+import './TomoIDV.css';
 
 export default function TomoIDVClient() {
   const [session_id, setSessionId] = useState<string | null>(null);
   const [connection_status, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
+  const [isLoading, setIsLoading] = useState(false);
+  const [verificationResult, setVerificationResult] = useState<any>(null);
   
+  // React Hook을 컴포넌트 최상위 레벨에서 호출
+  const { establishConnection } = TomoIDV.useTomoAuth({
+    onConnectionStatusChange: setConnectionStatus,
+    onSessionIdChange: setSessionId
+  });
   
+  const { openTomoIDVPopup } = TomoIDV.useTomoIDV();
+  
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await establishConnection();
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStartIDV = async () => {
+    if (session_id) {
+      openTomoIDVPopup(session_id);
+    }
+  };
+
+  const handleVerifySession = async () => {
+    if (session_id) {
+      try {
+        const result = await TomoIDV.verifySession(session_id);
+        setVerificationResult(result);
+      } catch (error) {
+        console.error('Session verification failed:', error);
+      }
+    }
+  };
+
+  const handleGetKYC = async () => {
+    if (session_id) {
+      try {
+        const result = await TomoIDV.getResult(session_id);
+        console.log('KYC Result:', result);
+        setVerificationResult(result);
+      } catch (error) {
+        console.error('KYC retrieval failed:', error);
+      }
+    }
+  };
+
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
-      <h1 className="text-2xl font-bold text-center mb-8">TomoIDV Quick Start Guide</h1>
-      
-      {/* Step 1: Login */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 1: Login</h2>
-        <p className="text-gray-600 mb-4">
-          로그인 버튼을 클릭하여 인증 절차를 시작합니다.
-        </p>
-        <Signin onConnectionStatusChange={setConnectionStatus} onSessionIdChange={setSessionId}
-          className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none transition duration-150"
-          label='로그인'
-        />
-      </div>
-
-      {/* Step 2: Session Info and Monitor */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 2: Session 정보 및 연결 상태</h2>
-        <p className="text-gray-600 mb-2">
-          로그인 완료 후 발급된 세션 정보입니다. API 접근에 필요한 중요한 값입니다.
-        </p>
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="font-semibold mb-2">Connection Status Monitor</h3>
-          <WebhookStatus session_id={session_id} connectionStatus={connection_status} />
+    <div className="tomo-idv-container">
+      {/* Header */}
+      <header className="header">
+        <div className="header-content">
+          <div className="header-left">
+            <h1 className="logo">🛍️ ShopDemo</h1>
+          </div>
+          <div className="header-right">
+            <div className="connection-status">
+              {connection_status === 'connected' ? (
+                <span className="status-connected">
+                  <div className="status-dot connected"></div>
+                  Connected
+                </span>
+              ) : (
+                <span className="status-disconnected">
+                  <div className="status-dot disconnected"></div>
+                  Disconnected
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Step 3: IDV Process */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 3: 고객 확인 절차</h2>
-        <p className="text-gray-600 mb-4">
-          IDV(Identity Verification) 버튼을 클릭하여 고객 확인 절차를 진행합니다.
-          <br />
-          <span className="text-sm text-blue-600 mt-1 block">
-            * Session ID가 발급된 후에만 IDV 버튼이 활성화됩니다.
-          </span>
-        </p>
-        <StartTomoIDV
-          session_id={session_id}
-          className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
-            session_id 
-              ? 'bg-green-600 hover:bg-green-700 cursor-pointer' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-          label='고객 확인 시작'
-        />
-      </div>
+      {/* Main Content */}
+      <main className="main-content">
+        <div className="content-grid">
+          
+          {/* Left Column - Product Demo */}
+          <div className="product-section">
+            <div className="product-card">
+              {/* Product Image */}
+              <div className="product-image">
+                <div className="product-info">
+                  <div className="product-icon">📱</div>
+                  <h2 className="product-title">Premium Smartphone</h2>
+                  <p className="product-subtitle">Latest Model - Limited Edition</p>
+                </div>
+              </div>
+              
+              {/* Product Info */}
+              <div className="product-details">
+                <div className="product-header">
+                  <div>
+                    <h3 className="product-name">iPhone 15 Pro Max</h3>
+                    <p className="product-specs">256GB - Titanium</p>
+                  </div>
+                  <div className="product-price">
+                    <div className="price">₩1,850,000</div>
+                    <div className="shipping">Free Shipping</div>
+                  </div>
+                </div>
+                
+                <div className="product-features">
+                  <div className="feature">
+                    <span className="feature-dot green"></span>
+                    In Stock - Ready to Ship
+                  </div>
+                  <div className="feature">
+                    <span className="feature-dot blue"></span>
+                    Secure Payment Required
+                  </div>
+                  <div className="feature">
+                    <span className="feature-dot purple"></span>
+                    Identity Verification Required
+                  </div>
+                </div>
 
-      {/* Step 4: Session Verification */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 4: 세션 유효성 검증</h2>
-        <p className="text-gray-600 mb-4">
-          현재 세션이 유효한지 확인합니다.
-        </p>
-        <button 
-          onClick={async () => {
-            if (session_id) {
-              TomoIDV.verifySession(session_id);
-            }
-          }}
-          disabled={!session_id}
-          className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
-            session_id 
-              ? 'bg-purple-600 hover:bg-purple-700 cursor-pointer' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-        >
-          세션 검증
-        </button>
-      </div>
+                {/* Action Buttons */}
+                <div className="action-buttons">
+                  {!session_id ? (
+                    <button
+                      onClick={handleLogin}
+                      disabled={isLoading}
+                      className={`login-button ${isLoading ? 'loading' : ''}`}
+                    >
+                      {isLoading ? (
+                        <span className="loading-content">
+                          <div className="spinner"></div>
+                          Connecting...
+                        </span>
+                      ) : (
+                        '🔐 Secure Login & Identity Verification'
+                      )}
+                    </button>
+                  ) : (
+                    <div className="idv-buttons">
+                      <button
+                        onClick={handleStartIDV}
+                        className="idv-button primary"
+                      >
+                        🆔 Start Identity Verification
+                      </button>
+                      <button
+                        onClick={handleVerifySession}
+                        className="idv-button secondary"
+                      >
+                        ✅ Verify Session
+                      </button>
+                      <button
+                        onClick={handleGetKYC}
+                        className="idv-button tertiary"
+                      >
+                        📋 Get KYC Information
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
-      {/* Step 6: KYC Information */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 6: KYC 정보 조회</h2>
-        <p className="text-gray-600 mb-4">
-          고객의 KYC 정보를 조회합니다. Production 환경에서는 보안을 위해 Hash 값으로 제공됩니다.
-        </p>
-        <button 
-          onClick={async () => {              
-            if (session_id) {
-              const result = await TomoIDV.getResult(session_id);
-              console.log(result);
-            }
-          }}
-          disabled={!session_id}
-          className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
-            session_id 
-              ? 'bg-indigo-600 hover:bg-indigo-700 cursor-pointer' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-        >
-          KYC 정보 조회
-        </button>
-      </div>
+          {/* Right Column - Status Panel */}
+          <div className="status-panel">
+            {/* Session Status */}
+            <div className="status-card">
+              <h3 className="status-title">
+                <span className="status-icon blue"></span>
+                Session Status
+              </h3>
+              <div className="status-content">
+                <div className="status-item">
+                  <span className="status-label">Status:</span>
+                  <span className={`status-value ${connection_status === 'connected' ? 'connected' : 'disconnected'}`}>
+                    {connection_status}
+                  </span>
+                </div>
+                <div className="status-item">
+                  <span className="status-label">Session ID:</span>
+                  <span className="session-id">
+                    {session_id || 'Not available'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Verification Result */}
+            {verificationResult && (
+              <div className="result-card">
+                <h3 className="result-title">
+                  <span className="status-icon green"></span>
+                  Verification Result
+                </h3>
+                <div className="result-content">
+                  <pre className="result-json">
+                    {JSON.stringify(verificationResult, null, 2)}
+                  </pre>
+                </div>
+              </div>
+            )}
+
+            {/* Developer Info */}
+            <div className="dev-info-card">
+              <h3 className="dev-info-title">
+                <span className="status-icon purple"></span>
+                Developer Info
+              </h3>
+              <div className="dev-info-content">
+                <p>• TomoIDV Quick Start Demo</p>
+                <p>• Test Identity Verification Flow</p>
+                <p>• Check Console for API Logs</p>
+                <p>• Session Management Demo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
