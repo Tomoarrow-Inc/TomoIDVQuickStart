@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+
 
 interface Config {
     webhookUrl: string;
@@ -7,6 +7,8 @@ interface Config {
     storeKycEndpoint: string;
     storeJpKycEndpoint: string;
     generateLinkTokenEndpoint: string;
+    verifySessionEndpoint: string;
+    resultsEndpoint: string;
     environment: 'development' | 'test' | 'production';
 }
 
@@ -47,7 +49,9 @@ const getEnvironmentConfig = (): Config => {
                 storeKycEndpoint: 'http://localhost:80/v1/us/store',
                 storeJpKycEndpoint: 'http://localhost:80/v1/jp/store',
                 generateLinkTokenEndpoint: 'http://localhost:80/v1/us/generate_link_token',
-                environment: 'development'
+                verifySessionEndpoint: 'http://localhost:80/v1/verify/session',
+                resultsEndpoint: 'http://localhost:80/v1/results',
+                environment: 'development',
             };
             
         case 'test':
@@ -58,6 +62,8 @@ const getEnvironmentConfig = (): Config => {
                 storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
                 storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
                 generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
+                verifySessionEndpoint: 'https://test.tomopayment.com/v1/verify/session',
+                resultsEndpoint: 'https://test.tomopayment.com/v1/results',
                 environment: 'test'
             };
             
@@ -69,6 +75,8 @@ const getEnvironmentConfig = (): Config => {
                 storeKycEndpoint: 'https://api.tomopayment.com/v1/us/store',
                 storeJpKycEndpoint: 'https://api.tomopayment.com/v1/jp/store',
                 generateLinkTokenEndpoint: 'https://api.tomopayment.com/v1/us/generate_link_token',             
+                verifySessionEndpoint: 'https://api.tomopayment.com/v1/verify/session',
+                resultsEndpoint: 'https://api.tomopayment.com/v1/results',
                 environment: 'production'
             };
     }
@@ -80,37 +88,41 @@ const validateEnvironmentVariables = (): Config => {
 
 export const config = validateEnvironmentVariables();
 
-// React 앱에서 환경변수 에러를 표시할 컴포넌트
-export const EnvironmentErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [error, setError] = useState<Error | null>(null);
-
-    useEffect(() => {
-        try {
-            validateEnvironmentVariables();
-        } catch (e) {
-            setError(e instanceof Error ? e : new Error('Configuration error'));
-        }
-    }, []);
-
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-red-50">
-                <div className="max-w-md p-8 bg-white rounded-lg shadow-lg">
-                    <h1 className="text-2xl font-bold text-red-600 mb-4">
-                        Configuration Error
-                    </h1>
-                    <div className="bg-red-100 border-l-4 border-red-500 p-4">
-                        <p className="text-red-700 whitespace-pre-wrap font-mono text-sm">
-                            {error.message}
-                        </p>
-                    </div>
-                    <p className="mt-4 text-gray-600">
-                        Please check your environment configuration and restart the application.
-                    </p>
-                </div>
-            </div>
-        );
+// 환경 검증 함수
+export const validateEnvironment = (): { isValid: boolean; error?: Error } => {
+    try {
+        validateEnvironmentVariables();
+        return { isValid: true };
+    } catch (e) {
+        const error = e instanceof Error ? e : new Error('Configuration error');
+        return { isValid: false, error };
     }
+};
 
-    return <>{children}</>;
+// 환경 에러 처리 함수
+export const handleEnvironmentError = (error: Error): void => {
+    console.error('Environment configuration error:', error);
+    
+    // 개발 환경에서는 더 자세한 에러 정보를 제공
+    if (isDevelopment()) {
+        console.error('Environment validation failed. Please check your configuration.');
+        console.error('Error details:', error.message);
+    }
+    
+    // 프로덕션 환경에서는 사용자 친화적인 메시지만 표시
+    if (isProduction()) {
+        console.error('Application configuration error. Please contact support.');
+    }
+};
+
+// 환경 초기화 함수
+export const initializeEnvironment = (): boolean => {
+    const { isValid, error } = validateEnvironment();
+    
+    if (!isValid && error) {
+        handleEnvironmentError(error);
+        return false;
+    }
+    
+    return true;
 };

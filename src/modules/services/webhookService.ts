@@ -1,4 +1,5 @@
-import { config, isDevelopment } from '../ClientEnv';
+import { isDevelopment } from '../ClientEnv';
+import { ConnectionStatus } from '../types/connectionStatus';
 import { 
     validateSecureConnection, 
     checkBrowserTLSSupport, 
@@ -15,7 +16,7 @@ export interface WebhookConnectionConfig {
 }
 
 export interface WebhookConnectionCallbacks {
-    onStatusChange: (status: string) => void;
+    onStatusChange: (status: ConnectionStatus) => void;
     onSessionIdChange: (sessionId: string) => void;
     onTlsErrorChange: (error: string | null) => void;
     onTlsInfoChange: (info: string | null) => void;
@@ -49,7 +50,7 @@ export class WebhookConnectionService {
 
     public async establishConnection(): Promise<void> {
         try {
-            this.callbacks.onStatusChange('connecting');
+            this.callbacks.onStatusChange('connecting' as ConnectionStatus);
             this.callbacks.onTlsErrorChange(null);
 
             const isDevMode = isDevelopment();
@@ -59,7 +60,7 @@ export class WebhookConnectionService {
             if (!browserTLS.supported && !isDevMode) {
                 this.state.tlsError = browserTLS.info;
             this.callbacks.onTlsErrorChange(browserTLS.info);
-                this.callbacks.onStatusChange('disconnected');
+                this.callbacks.onStatusChange('disconnected' as ConnectionStatus);
                 return;
             }
 
@@ -74,7 +75,7 @@ export class WebhookConnectionService {
                     : 'Secure HTTPS/TLS connection required. TLS 1.2+ is mandatory for security in production.';
                 this.state.tlsError = errorMsg;
                 this.callbacks.onTlsErrorChange(errorMsg);
-                this.callbacks.onStatusChange('disconnected');
+                this.callbacks.onStatusChange('disconnected' as ConnectionStatus);
                 return;
             }
 
@@ -108,7 +109,7 @@ export class WebhookConnectionService {
                 this.callbacks.onTlsErrorChange(errorMsg);
             }
 
-            this.callbacks.onStatusChange('disconnected');
+            this.callbacks.onStatusChange('disconnected' as ConnectionStatus);
         }
     }
 
@@ -120,7 +121,7 @@ export class WebhookConnectionService {
                 ? 'Webhook connection established (development mode)'
                 : 'Secure webhook connection established with TLS 1.2+';
             console.log(connectionMsg);
-            this.callbacks.onStatusChange('connected');
+            this.callbacks.onStatusChange('connected' as ConnectionStatus);
             this.state.connectionAttempt = 0;
             this.callbacks.onConnectionAttemptChange(0);
 
@@ -144,7 +145,7 @@ export class WebhookConnectionService {
                             ? 'Connected to webhook stream (development)'
                             : 'Connected to secure webhook stream';
                         console.log(connectMsg);
-                        this.callbacks.onStatusChange('connected');
+                        this.callbacks.onStatusChange('connected' as ConnectionStatus);
                         break;
                     case 'session.opened':
                         console.log('Session opened:', webhookEvent.data);
@@ -201,7 +202,7 @@ export class WebhookConnectionService {
                 return;
             }
 
-            this.callbacks.onStatusChange('disconnected');
+            this.callbacks.onStatusChange('disconnected' as ConnectionStatus);
             this.cleanup();
         };
     }

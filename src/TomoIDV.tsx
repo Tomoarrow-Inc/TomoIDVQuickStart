@@ -1,22 +1,18 @@
 // import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 import { useState } from 'react';
-import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
-import { getApiEndpoints, getCurrentApiEnvironment } from './ApiConfig';
-import { config } from './modules/ClientEnv';
+import { ConnectionStatus } from './modules/tomo-idv-client';
+import { TomoIDV } from './modules/tomo-idv-client';
+import Signin from './Signin';
+import StartTomoIDV from './StartTomoIDV';
+import WebhookStatus from './WebhookStatus';
 
 
-interface TomoIDVClientProps { 
-  // connection_status: ConnectionStatus;
-  // session_id: string | null;
-}
+
 
 export default function TomoIDVClient() {
   const [session_id, setSessionId] = useState<string | null>(null);
   const [connection_status, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   
-  // API 설정 가져오기
-  const apiEndpoints = getApiEndpoints();
-  const currentEnvironment = getCurrentApiEnvironment();
   
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
@@ -28,7 +24,7 @@ export default function TomoIDVClient() {
         <p className="text-gray-600 mb-4">
           로그인 버튼을 클릭하여 인증 절차를 시작합니다.
         </p>
-        <Signin setConnectionStatus={setConnectionStatus} setSessionId={setSessionId}
+        <Signin onConnectionStatusChange={setConnectionStatus} onSessionIdChange={setSessionId}
           className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none transition duration-150"
           label='로그인'
         />
@@ -74,21 +70,10 @@ export default function TomoIDVClient() {
           현재 세션이 유효한지 확인합니다.
         </p>
         <button 
-          onClick={() => {
-            fetch(apiEndpoints.verifySessionEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ session_id })
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => {
-                console.error(err);
-            });
+          onClick={async () => {
+            if (session_id) {
+              TomoIDV.verifySession(session_id);
+            }
           }}
           disabled={!session_id}
           className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
@@ -101,41 +86,6 @@ export default function TomoIDVClient() {
         </button>
       </div>
 
-      {/* Step 5: KYC Store */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-2">Step 5: KYC 저장</h2>
-        <p className="text-gray-600 mb-4">
-          고객의 KYC 정보를 저장소에 저장합니다.
-        </p>
-        <button 
-          onClick={() => {
-            console.log(session_id);
-            fetch(config.storeJpKycEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ session_id })
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-          }}
-          disabled={!session_id}
-          className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${
-            session_id 
-              ? 'bg-orange-600 hover:bg-orange-700 cursor-pointer' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-        >
-          KYC 저장
-        </button>
-      </div>
-
       {/* Step 6: KYC Information */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-lg font-semibold mb-2">Step 6: KYC 정보 조회</h2>
@@ -143,21 +93,11 @@ export default function TomoIDVClient() {
           고객의 KYC 정보를 조회합니다. Production 환경에서는 보안을 위해 Hash 값으로 제공됩니다.
         </p>
         <button 
-          onClick={() => {              
-              fetch(apiEndpoints.resultsEndpoint, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ session_id })
-              })
-                  .then(res => res.json())
-                  .then(data => {
-                      console.log(JSON.stringify(data, null, 2));
-                  })
-                  .catch(err => {
-                      console.error(err);
-                  });
+          onClick={async () => {              
+            if (session_id) {
+              const result = await TomoIDV.getResult(session_id);
+              console.log(result);
+            }
           }}
           disabled={!session_id}
           className={`w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded text-white transition duration-150 ${

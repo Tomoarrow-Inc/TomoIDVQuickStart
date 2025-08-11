@@ -1,12 +1,8 @@
-import { ConnectionStatus } from './models';
-import StartTomoIDV from './StartTomoIDV';
-import WebhookStatus from './WebhookStatus';
-import Signin from './Signin';
+import { ConnectionStatus } from './types/connectionStatus';
+import TomoIDV from './TomoIDV';
 
 // Re-export all components
 export {
     type ConnectionStatus,
-    StartTomoIDV,
-    WebhookStatus,
-    Signin
+    TomoIDV
 };
