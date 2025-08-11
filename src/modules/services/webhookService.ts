@@ -1,5 +1,5 @@
 import { isDevelopment } from '../ClientEnv';
-import { ConnectionStatus } from '../types/connectionStatus';
+import { ConnectionStatus, WebhookEvent } from '../types/webhook';
 import { 
     validateSecureConnection, 
     checkBrowserTLSSupport, 
@@ -7,7 +7,6 @@ import {
     monitorConnectionQuality 
 } from '../utils/connectionUtils';
 import { openTomoIDVPopup } from '../utils/popupUtils';
-import { WebhookEvent } from '../types/webhook';
 
 export interface WebhookConnectionConfig {
     webhookUrl: string;

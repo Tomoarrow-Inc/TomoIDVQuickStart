@@ -1,4 +1,4 @@
-import { ConnectionStatus } from './connectionStatus';
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected';
 
 export interface WebhookEvent {
     event: string;

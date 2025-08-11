@@ -1,4 +1,3 @@
-import { useEnvironment } from "./modules/hooks/useEnvironment";
 import { TomoIDV } from "./modules/TomoIDV";
 
 interface StartTomoIDVProps {
@@ -8,7 +7,7 @@ interface StartTomoIDVProps {
 }
 
 const StartTomoIDV = ({ session_id, className = '', label = 'Start Identity Verification' }: StartTomoIDVProps) => {
-  const { openTomoIDVPopup } = TomoIDV.usePopup();
+  const { openTomoIDVPopup } = TomoIDV.useTomoIDV();
 
   // 새로운 팝업 창 열기 함수
   const handleOpenIdvPopup = () => {

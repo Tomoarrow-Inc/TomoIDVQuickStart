@@ -1,6 +1,4 @@
 import './App.css';
-// import { ConnectionStatus } from 'tomo-idv-client';
-import { ConnectionStatus } from './modules/tomo-idv-client';
 import TomoIDVClient from './TomoIDV';
 
 

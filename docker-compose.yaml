@@ -14,10 +14,3 @@ services:
 
     env_file:
       - .env.test
-      # - .env.local
-      # - test-proxy-port-swap.env
-      # - local-proxy-port-swap.env
-      # - test-proxy.env
-      # - local-proxy.env
-      # - local.env
-      # - test.env

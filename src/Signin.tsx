@@ -1,7 +1,4 @@
-import React from 'react';
-import { TomoIDV } from './modules/TomoIDV';
-import { UseWebhookConnectionProps } from './modules/types/webhook';
-import { EnvironmentErrorBoundary } from './test/modules/ClientEnv';
+import { TomoIDV, UseWebhookConnectionProps } from './modules/tomo-idv-client';
 
 interface SigninProps extends UseWebhookConnectionProps {
     className?: string;
@@ -9,7 +6,7 @@ interface SigninProps extends UseWebhookConnectionProps {
 }
 
 const Signin = ({ className = '', label = 'Tomo Signin', onConnectionStatusChange, onSessionIdChange }: SigninProps) => {
-    const { establishConnection } = TomoIDV.useWebhookConnection({
+    const { establishConnection } = TomoIDV.useTomoAuth({
         onConnectionStatusChange,
         onSessionIdChange
     });

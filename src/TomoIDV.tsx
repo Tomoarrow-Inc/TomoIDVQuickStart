@@ -1,12 +1,11 @@
-// import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
 import { useState } from 'react';
-import { ConnectionStatus } from './modules/tomo-idv-client';
-import { TomoIDV } from './modules/tomo-idv-client';
 import Signin from './Signin';
 import StartTomoIDV from './StartTomoIDV';
 import WebhookStatus from './WebhookStatus';
 
 
+// import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from 'tomo-idv-client';
+import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
 
 
 export default function TomoIDVClient() {
