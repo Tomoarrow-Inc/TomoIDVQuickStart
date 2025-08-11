@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { ConnectionStatus, WebhookStatus, Signin, StartTomoIDV } from './modules/tomo-idv-client';
 import { getApiEndpoints, getCurrentApiEnvironment } from './ApiConfig';
+import { config } from './modules/ClientEnv';
 
 
 interface TomoIDVClientProps { 
