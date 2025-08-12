@@ -41,7 +41,8 @@ export default function TomoIDVClient() {
   const handleVerifySession = async () => {
     if (!session_id) return;
     try {
-      await TomoIDV.verifySession(session_id);
+      const result = await TomoIDV.verifySession(session_id);
+      setVerificationResult(result);
     } catch (error) {
       console.error('Session verification failed:', error);
     }
@@ -150,7 +151,7 @@ export default function TomoIDVClient() {
           <div className="right-panel">
             {/* Developer Tools Section */}
             <div className="utility-section">
-              <h3 className="section-title">Developer Tools</h3>
+              <h3 className="section-title">Built-in APIs</h3>
               
               {/* Verify Session */}
               <div className="api-section">
@@ -198,31 +199,39 @@ export default function TomoIDVClient() {
           <div className="results-container">
             <div className="result-card">
               <h3 className="result-title">
-                <div className="status-icon blue"></div>
-                Verify Session Result
-              </h3>
-              <div className="result-content">
-                <pre className="result-json">
-                  {verificationResult ? 
-                    JSON.stringify(verificationResult, null, 2) : 
-                    'No session verification result available. Click "Verify Session" to get results.'
-                  }
-                </pre>
-              </div>
-            </div>
-
-            <div className="result-card">
-              <h3 className="result-title">
                 <div className="status-icon green"></div>
                 Response Result
               </h3>
               <div className="result-content">
-                <pre className="result-json">
-                  {verificationResult ? 
-                    JSON.stringify(verificationResult, null, 2) : 
-                    'No KYC verification result available. Click "Get KYC Data" to retrieve results.'
-                  }
-                </pre>
+                {verificationResult ? (
+                  <div className="json-display">
+                    <div className="json-header">
+                      <span className="json-type">JSON Response</span>
+                      <button 
+                        className="copy-button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(JSON.stringify(verificationResult, null, 2));
+                        }}
+                        title="Copy to clipboard"
+                      >
+                        📋 Copy
+                      </button>
+                    </div>
+                    <div className="json-content">
+                      <pre className="result-json">
+                        {JSON.stringify(verificationResult, null, 2)}
+                      </pre>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-result">
+                    <div className="no-result-icon">{"{ }"}</div>
+                    <div className="no-result-text">
+                      <h4>No Response Data</h4>
+                      <p>Test Built-in APIs to retrieve JSON response from the server</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

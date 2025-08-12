@@ -606,13 +606,162 @@
   padding: 1rem;
 }
 
-.result-json {
-  font-size: 0.75rem;
+/* JSON Display Styles */
+.json-display {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.json-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.json-type {
+  font-size: 0.875rem;
+  font-weight: 600;
   color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.json-type::before {
+  content: '{ }';
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #8b5cf6;
+  font-weight: 700;
+}
+
+.copy-button {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.copy-button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+.json-content {
+  max-height: 400px;
   overflow: auto;
+}
+
+.result-json {
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  color: #1f2937;
   margin: 0;
+  padding: 1rem;
   white-space: pre-wrap;
   word-break: break-word;
+  line-height: 1.6;
+  background: #fafafa;
+  border-radius: 0;
+  text-align: left;
+}
+
+/* JSON Syntax Highlighting */
+.result-json {
+  color: #1f2937;
+}
+
+/* Enhanced JSON Display */
+.result-json {
+  position: relative;
+  background: #fafafa;
+  border-left: 4px solid #8b5cf6;
+}
+
+/* JSON indentation guide lines */
+.result-json {
+  background-image: 
+    linear-gradient(90deg, 
+      transparent 0%, 
+      transparent 15px, 
+      rgba(139, 92, 246, 0.1) 15px, 
+      rgba(139, 92, 246, 0.1) 16px, 
+      transparent 16px
+    );
+  background-size: 20px 100%;
+  background-repeat: repeat-y;
+}
+
+/* No Result State - Data Panel Style */
+.no-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.no-result::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+}
+
+.no-result-icon {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #8b5cf6;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.no-result-text h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.025em;
+}
+
+.no-result-text p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 300px;
 }
 
 /* API Section Styles */
