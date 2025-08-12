@@ -10,7 +10,6 @@ interface PopupOptions {
 }
 
 interface UsePopupReturn {
-  openPopup: (url: string, options?: PopupOptions) => Window | null;
   openTomoIDVPopup: (sessionId: string, options?: PopupOptions) => Window | null;
 }
 
@@ -66,7 +65,6 @@ export const usePopup = (): UsePopupReturn => {
   }, [openPopup, isEnvironmentReady, envError]);
 
   return {
-    openPopup,
     openTomoIDVPopup
   };
 };
