@@ -61,12 +61,6 @@ export default function TomoIDVClient() {
     }
   };
 
-  const handlePurchase = () => {
-    if (isIDVCompleted) {
-      alert('Purchase completed! Thank you for your order.');
-    }
-  };
-
   return (
     <div className="tomo-idv-container">
       {/* Header with Connection Status */}
@@ -100,55 +94,9 @@ export default function TomoIDVClient() {
       {/* Main Content */}
       <main className="main-content">
         <div className="content-grid">
-          {/* Product Section - Simplified */}
-          <div className="product-section">
-            <div className="product-card">
-              <div className="product-image">
-                <div className="product-info">
-                  <div className="product-icon">📱</div>
-                  <h2 className="product-title">iPhone 15 Pro Max</h2>
-                  <p className="product-subtitle">Premium Smartphone</p>
-                </div>
-              </div>
-              <div className="product-details">
-                <div className="product-header">
-                  <div>
-                    <h3 className="product-name">iPhone 15 Pro Max</h3>
-                    <p className="product-specs">256GB • Natural Titanium</p>
-                  </div>
-                  <div className="product-price">
-                    <div className="price">$1,199</div>
-                    <div className="shipping">Free Shipping</div>
-                  </div>
-                </div>
-                <div className="product-features">
-                  <div className="feature">
-                    <div className="feature-dot green"></div>
-                    In Stock
-                  </div>
-                  <div className="feature">
-                    <div className="feature-dot blue"></div>
-                    Secure Payment Required
-                  </div>
-                  <div className="feature">
-                    <div className="feature-dot purple"></div>
-                    Identity Verification Required
-                  </div>
-                </div>
-                <button 
-                  onClick={handlePurchase}
-                  disabled={!isIDVCompleted}
-                  className="purchase-button"
-                >
-                  {isIDVCompleted ? 'Purchase Now - $1,199' : 'Complete IDV to Purchase'}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Panel - Prominent */}
-          <div className="action-panel">
-            {/* Login Section */}
+          {/* Left Side - Authentication Steps */}
+          <div className="left-panel">
+            {/* Step 1: Authentication */}
             <div className="action-section">
               <h3 className="section-title">Step 1: Authentication</h3>
               <div className="action-card">
@@ -176,7 +124,7 @@ export default function TomoIDVClient() {
               </div>
             </div>
 
-            {/* IDV Section */}
+            {/* Step 2: Identity Verification */}
             <div className="action-section">
               <h3 className="section-title">Step 2: Identity Verification</h3>
               <div className="action-card">
@@ -196,7 +144,10 @@ export default function TomoIDVClient() {
                 </button>
               </div>
             </div>
+          </div>
 
+          {/* Right Side - Developer Tools */}
+          <div className="right-panel">
             {/* Developer Tools Section */}
             <div className="utility-section">
               <h3 className="section-title">Developer Tools</h3>
@@ -219,7 +170,7 @@ export default function TomoIDVClient() {
                   Verify Session
                 </button>
               </div>
-
+              
               {/* Get KYC Data */}
               <div className="api-section">
                 <div className="api-header">
@@ -242,51 +193,36 @@ export default function TomoIDVClient() {
           </div>
         </div>
 
-        {/* Results and Developer Info Panel */}
-        <div className="info-panel">
-          {verificationResult && (
+        {/* API Results Panel - Full Width Bottom */}
+        <div className="results-panel">
+          <div className="results-container">
             <div className="result-card">
               <h3 className="result-title">
-                <div className="status-icon green"></div>
-                Verification Result
+                <div className="status-icon blue"></div>
+                Verify Session Result
               </h3>
               <div className="result-content">
                 <pre className="result-json">
-                  {JSON.stringify(verificationResult, null, 2)}
+                  {verificationResult ? 
+                    JSON.stringify(verificationResult, null, 2) : 
+                    'No session verification result available. Click "Verify Session" to get results.'
+                  }
                 </pre>
               </div>
             </div>
-          )}
 
-          <div className="dev-info-card">
-            <h3 className="dev-info-title">
-              <div className="status-icon purple"></div>
-              Developer Info
-            </h3>
-            <div className="dev-info-content">
-              <div className="feature-section">
-                <h4 className="feature-title">🔐 Authentication Flow</h4>
-                <p>Establishes secure WebSocket connection with TomoIDV service. Returns session ID for subsequent operations.</p>
-              </div>
-              
-              <div className="feature-section">
-                <h4 className="feature-title">🆔 Identity Verification</h4>
-                <p>Opens popup window for user to complete KYC process. Supports document upload, face verification, and liveness detection.</p>
-              </div>
-              
-              <div className="feature-section">
-                <h4 className="feature-title">📊 Session Management</h4>
-                <p>Verify session status and retrieve KYC results using session ID. Real-time status updates via WebSocket connection.</p>
-              </div>
-              
-              <div className="feature-section">
-                <h4 className="feature-title">🔗 Webhook Integration</h4>
-                <p>Receive real-time notifications when verification status changes. Configure webhook endpoints for production use.</p>
-              </div>
-              
-              <div className="feature-section">
-                <h4 className="feature-title">🛡️ Security Features</h4>
-                <p>End-to-end encryption, secure token management, and compliance with KYC/AML regulations.</p>
+            <div className="result-card">
+              <h3 className="result-title">
+                <div className="status-icon green"></div>
+                Response Result
+              </h3>
+              <div className="result-content">
+                <pre className="result-json">
+                  {verificationResult ? 
+                    JSON.stringify(verificationResult, null, 2) : 
+                    'No KYC verification result available. Click "Get KYC Data" to retrieve results.'
+                  }
+                </pre>
               </div>
             </div>
           </div>
