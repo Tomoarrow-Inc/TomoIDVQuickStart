@@ -6,11 +6,8 @@ services:
     volumes:
       - ./:/app
 
-    entrypoint: ["npm", "start"]
+    entrypoint: ["npm", "run", "start:test"]
 
     ports:
-      - 3002:3000
-      - 3003:3003
-
-    environment:
-      - REACT_APP_TOMO_IDV_ENV=test
+      - "3000:3000"
+      - "3001:3001"

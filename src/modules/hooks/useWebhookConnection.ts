@@ -18,10 +18,17 @@ export const useWebhookConnection = ({ onConnectionStatusChange, onSessionIdChan
 
     // Initialize service on mount
     useEffect(() => {
+        console.log('useWebhookConnection: useEffect triggered');
+        console.log('useWebhookConnection: isEnvironmentReady:', isEnvironmentReady);
+        console.log('useWebhookConnection: envError:', envError);
+        
         if (!isEnvironmentReady) {
-            console.error('Environment is not ready in useWebhookConnection:', envError);
+            console.log('useWebhookConnection: Waiting for environment to be ready...');
             return;
         }
+
+        console.log('useWebhookConnection: Environment is ready, initializing service...');
+        console.log('useWebhookConnection: Config:', config);
 
         const serviceConfig: WebhookConnectionConfig = {
             webhookUrl: config.webhookUrl,
@@ -38,6 +45,7 @@ export const useWebhookConnection = ({ onConnectionStatusChange, onSessionIdChan
         };
 
         serviceRef.current = new WebhookConnectionService(serviceConfig, callbacks);
+        console.log('useWebhookConnection: Service initialized successfully');
 
         // Cleanup on unmount
         return () => {
@@ -46,6 +54,11 @@ export const useWebhookConnection = ({ onConnectionStatusChange, onSessionIdChan
             }
         };
     }, [onConnectionStatusChange, onSessionIdChange, isEnvironmentReady, envError]);
+
+    // 디버깅을 위한 로그
+    useEffect(() => {
+        console.log('useWebhookConnection: State changed - isEnvironmentReady:', isEnvironmentReady, 'envError:', envError);
+    }, [isEnvironmentReady, envError]);
 
     const establishConnection = useCallback(async () => {
         if (!isEnvironmentReady) {
