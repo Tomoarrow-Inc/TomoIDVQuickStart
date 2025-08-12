@@ -6,7 +6,7 @@ services:
     volumes:
       - ./:/app
 
-    entrypoint: ["npm", "run", "start:test"]
+    entrypoint: ["npm", "run", "start:local"]
 
     ports:
       - "3000:3000"

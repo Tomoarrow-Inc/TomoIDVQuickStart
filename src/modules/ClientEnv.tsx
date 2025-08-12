@@ -9,11 +9,11 @@ interface Config {
     generateLinkTokenEndpoint: string;
     verifySessionEndpoint: string;
     resultsEndpoint: string;
-    environment: 'development' | 'test' | 'production';
+    environment: 'development' | 'test' | 'production' | 'local';
 }
 
 // 환경 감지 함수
-export const getEnvironment = (): 'development' | 'test' | 'production' => {
+export const getEnvironment = (): 'development' | 'test' | 'production' | 'local' => {
     const env = process.env.REACT_APP_ENV?.toLowerCase();
     
     if (env === 'development' || env === 'dev') return 'development';
@@ -41,6 +41,19 @@ const getEnvironmentConfig = (): Config => {
     const environment = getEnvironment();
     
     switch (environment) {
+        case 'local':   
+            return {
+                webhookUrl: 'http://localhost/v1/webhook/session',
+                tomoIdvUrl: 'http://localhost:3000/auth/tomo-idv',
+                tomoIdvAppUrl: 'http://localhost:3000/idv',
+                storeKycEndpoint: 'http://localhost:3001/v1/us/store',
+                storeJpKycEndpoint: 'http://localhost:3001/v1/jp/store',
+                generateLinkTokenEndpoint: 'http://localhost:3001/v1/us/generate_link_token',
+                verifySessionEndpoint: 'http://localhost:3001/v1/verify/session',
+                resultsEndpoint: 'http://localhost:3001/v1/results',
+                environment: 'local'
+            };
+            
         case 'development':
             return {
                 webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
