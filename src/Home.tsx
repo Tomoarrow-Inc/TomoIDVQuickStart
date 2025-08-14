@@ -175,6 +175,47 @@ export default function TomoIDVClient() {
                 </button>
               </div>
             </div>
+
+            {/* Response Result Panel - Compact */}
+            <div className="results-panel-compact">
+              <div className="result-card-compact">
+                <h3 className="result-title-compact">
+                  <div className="status-icon green"></div>
+                  Response Result
+                </h3>
+                <div className="result-content-compact">
+                  {verificationResult ? (
+                    <div className="json-display-compact">
+                      <div className="json-header-compact">
+                        <span className="json-type">JSON Response</span>
+                        <button 
+                          className="copy-button-compact"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(verificationResult, null, 2));
+                          }}
+                          title="Copy to clipboard"
+                        >
+                          📋 Copy
+                        </button>
+                      </div>
+                      <div className="json-content-compact">
+                        <pre className="result-json-compact">
+                          {JSON.stringify(verificationResult, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="no-result-compact">
+                      <div className="no-result-icon">{"{ }"}</div>
+                      <div className="no-result-text">
+                        <h4>No Response Data</h4>
+                        <p>Test Built-in APIs to retrieve JSON response from the server</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right Side - Developer Tools */}
@@ -192,13 +233,13 @@ export default function TomoIDVClient() {
                 <div className="endpoint-item">
                   <div className="endpoint-code">
                     <span className="url">https://test.tomopayment.com/v1</span>
-                    <button 
+                    {/* <button 
                       onClick={() => navigator.clipboard.writeText('https://test.tomopayment.com/v1')}
                       className="copy-icon"
                       title="Copy to clipboard"
                     >
                       📋
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
@@ -293,49 +334,6 @@ export default function TomoIDVClient() {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* API Results Panel - Full Width Bottom */}
-        <div className="results-panel">
-          <div className="results-container">
-            <div className="result-card">
-              <h3 className="result-title">
-                <div className="status-icon green"></div>
-                Response Result
-              </h3>
-              <div className="result-content">
-                {verificationResult ? (
-                  <div className="json-display">
-                    <div className="json-header">
-                      <span className="json-type">JSON Response</span>
-                      <button 
-                        className="copy-button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(JSON.stringify(verificationResult, null, 2));
-                        }}
-                        title="Copy to clipboard"
-                      >
-                        📋 Copy
-                      </button>
-                    </div>
-                    <div className="json-content">
-                      <pre className="result-json">
-                        {JSON.stringify(verificationResult, null, 2)}
-                      </pre>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="no-result">
-                    <div className="no-result-icon">{"{ }"}</div>
-                    <div className="no-result-text">
-                      <h4>No Response Data</h4>
-                      <p>Test Built-in APIs to retrieve JSON response from the server</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
