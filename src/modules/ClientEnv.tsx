@@ -37,42 +37,16 @@ export const isProduction = (): boolean => {
 
 // 환경별 설정 관리
 const getEnvironmentConfig = (): Config => {
-    const environment = getEnvironment();
-    
-    switch (environment) {
-        case 'development':
-            return {
-                webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
-                tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
-                tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
-                storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
-                storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
-                generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
-                environment: 'test'
-            };
-            
-        case 'test':
-            return {
-                webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
-                tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
-                tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
-                storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
-                storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
-                generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
-                environment: 'test'
-            };
-            
-        case 'production':
-            return {
-                webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
-                tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
-                tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
-                storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
-                storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
-                generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
-                environment: 'test'
-            };
-    }
+    return {
+        webhookUrl: 'https://test.tomopayment.com/v1/webhook/session',
+        tomoIdvUrl: 'https://app-test.tomopayment.com/auth/tomo-idv',
+        tomoIdvAppUrl: 'https://app-test.tomopayment.com/idv',
+        storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
+        storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
+        generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
+        environment: 'test'
+    };
+
 };
 
 const validateEnvironmentVariables = (): Config => {
