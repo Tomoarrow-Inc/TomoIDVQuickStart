@@ -63,16 +63,16 @@ export default function TomoIDVClient() {
     }
   };
 
-  const handleGetKYC = async () => {
+  const handleGetKYC = async (nationality: string) => {
     if (!session_id) return;
     try {
-      const response = await fetch(`https://test.tomopayment.com/v1/results`,
+      const response = await fetch(`https://test.tomopayment.com/v1/${nationality}/verify/kyc`,
         {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ session_id })
+          body: JSON.stringify({ session_id, nationality })
         });
       
       if (!response.ok) {
@@ -80,11 +80,11 @@ export default function TomoIDVClient() {
       }
       
       const data = await response.json();
-      console.log('KYC result:', JSON.stringify(data, null, 2));
+      console.log(`KYC data for ${nationality}:` + JSON.stringify(data, null, 2));
       setVerificationResult(data);
       
       // Check if verification is completed based on result
-      if (data && data.kycResultKycData_status === 'success') {
+      if (data && data.verified === 'true') {
         setIsIDVCompleted(true);
       }
     } catch (error) {
@@ -189,7 +189,7 @@ export default function TomoIDVClient() {
                   <h4 className="api-title">Verify Session</h4>
                   <div className="endpoint-info">
                     <span className="endpoint-method">POST</span>
-                    <span className="endpoint-url">/api/verify-session</span>
+                    <span className="endpoint-url">/verify/session</span>
                   </div>
                 </div>
                 <p className="api-description">Validates the current session and returns session status information</p>
@@ -207,18 +207,54 @@ export default function TomoIDVClient() {
                 <div className="api-header">
                   <h4 className="api-title">Get KYC Data</h4>
                   <div className="endpoint-info">
-                    <span className="endpoint-method">GET</span>
-                    <span className="endpoint-url">/api/get-result</span>
+                    <span className="endpoint-method">POST</span>
+                    <span className="endpoint-url">/jp/verify/kyc</span>
                   </div>
                 </div>
-                <p className="api-description">Retrieves KYC verification results and user data</p>
-                <button 
-                  onClick={handleGetKYC} 
-                  disabled={!session_id}
-                  className="utility-button"
-                >
-                  Get KYC Data
-                </button>
+                <p className="api-description">Retrieves KYC verification results and user data by nationality</p>
+                
+                {/* Nationality KYC Buttons */}
+                <div className="nationality-kyc-grid">
+                  <button 
+                    onClick={() => handleGetKYC('jp')} 
+                    disabled={!session_id}
+                    className="nationality-kyc-button japan"
+                    title="Check Japanese KYC verification"
+                  >
+                    <span className="flag">🇯🇵</span>
+                    <span className="country">Japan</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => handleGetKYC('us')} 
+                    disabled={!session_id}
+                    className="nationality-kyc-button usa"
+                    title="Check US KYC verification"
+                  >
+                    <span className="flag">🇺🇸</span>
+                    <span className="country">USA</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => handleGetKYC('uk')} 
+                    disabled={!session_id}
+                    className="nationality-kyc-button uk"
+                    title="Check UK KYC verification"
+                  >
+                    <span className="flag">🇬🇧</span>
+                    <span className="country">UK</span>
+                  </button>
+                  
+                  <button 
+                    onClick={() => handleGetKYC('ca')} 
+                    disabled={!session_id}
+                    className="nationality-kyc-button canada"
+                    title="Check Canada KYC verification"
+                  >
+                    <span className="flag">🇨🇦</span>
+                    <span className="country">Canada</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
