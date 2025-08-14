@@ -183,77 +183,115 @@ export default function TomoIDVClient() {
             <div className="utility-section">
               <h3 className="section-title">Built-in APIs</h3>
               
+              {/* Base URL */}
+              <div className="api-section">
+                <div className="api-header">
+                  <h4 className="api-title">Base URL</h4>
+                </div>
+                <p className="api-description">Base URL for all APIs</p>
+                <div className="endpoint-item">
+                  <div className="endpoint-code">
+                    <span className="url">https://test.tomopayment.com/v1</span>
+                    <button 
+                      onClick={() => navigator.clipboard.writeText('https://test.tomopayment.com/v1')}
+                      className="copy-icon"
+                      title="Copy to clipboard"
+                    >
+                      📋
+                    </button>
+                  </div>
+                </div>
+              </div>
+                
               {/* Verify Session */}
               <div className="api-section">
                 <div className="api-header">
                   <h4 className="api-title">Verify Session</h4>
-                  <div className="endpoint-info">
-                    <span className="endpoint-method">POST</span>
-                    <span className="endpoint-url">/verify/session</span>
-                  </div>
                 </div>
                 <p className="api-description">Validates the current session and returns session status information</p>
-                <button 
-                  onClick={handleVerifySession} 
-                  disabled={!session_id}
-                  className="utility-button"
-                >
-                  Verify Session
-                </button>
+                <div className="endpoint-item">
+                  <div className="endpoint-code">
+                    <span className="method">POST</span>
+                    <span className="url">/verify/session</span>
+                  </div>
+                  <button 
+                    onClick={handleVerifySession} 
+                    disabled={!session_id}
+                    className="test-button"
+                  >
+                    Test
+                  </button>
+                </div>
               </div>
               
               {/* Get KYC Data */}
               <div className="api-section">
                 <div className="api-header">
                   <h4 className="api-title">Get KYC Data</h4>
-                  <div className="endpoint-info">
-                    <span className="endpoint-method">POST</span>
-                    <span className="endpoint-url">/jp/verify/kyc</span>
-                  </div>
+                  <p className="api-description">Retrieves KYC verification results and user data by nationality</p>
                 </div>
-                <p className="api-description">Retrieves KYC verification results and user data by nationality</p>
                 
-                {/* Nationality KYC Buttons */}
-                <div className="nationality-kyc-grid">
-                  <button 
-                    onClick={() => handleGetKYC('jp')} 
-                    disabled={!session_id}
-                    className="nationality-kyc-button japan"
-                    title="Check Japanese KYC verification"
-                  >
-                    <span className="flag">🇯🇵</span>
-                    <span className="country">Japan</span>
-                  </button>
+                {/* Nationality KYC API Endpoints */}
+                <div className="kyc-endpoints">
+                  {/* Japan KYC */}
+                  <div className="endpoint-item">
+                    <div className="endpoint-code">
+                      <span className="method">POST</span>
+                      <span className="url">/jp/verify/kyc</span>
+                    </div>
+                    <button 
+                      onClick={() => handleGetKYC('jp')} 
+                      disabled={!session_id}
+                      className="test-button"
+                    >
+                      Test
+                    </button>
+                  </div>
                   
-                  <button 
-                    onClick={() => handleGetKYC('us')} 
-                    disabled={!session_id}
-                    className="nationality-kyc-button usa"
-                    title="Check US KYC verification"
-                  >
-                    <span className="flag">🇺🇸</span>
-                    <span className="country">USA</span>
-                  </button>
+                  {/* USA KYC */}
+                  <div className="endpoint-item">
+                    <div className="endpoint-code">
+                      <span className="method">POST</span>
+                      <span className="url">/us/verify/kyc</span>
+                    </div>
+                    <button 
+                      onClick={() => handleGetKYC('us')} 
+                      disabled={!session_id}
+                      className="test-button"
+                    >
+                      Test
+                    </button>
+                  </div>
                   
-                  <button 
-                    onClick={() => handleGetKYC('uk')} 
-                    disabled={!session_id}
-                    className="nationality-kyc-button uk"
-                    title="Check UK KYC verification"
-                  >
-                    <span className="flag">🇬🇧</span>
-                    <span className="country">UK</span>
-                  </button>
+                  {/* UK KYC */}
+                  <div className="endpoint-item">
+                    <div className="endpoint-code">
+                      <span className="method">POST</span>
+                      <span className="url">/uk/verify/kyc</span>
+                    </div>
+                    <button 
+                      onClick={() => handleGetKYC('uk')} 
+                      disabled={!session_id}
+                      className="test-button"
+                    >
+                      Test
+                    </button>
+                  </div>
                   
-                  <button 
-                    onClick={() => handleGetKYC('ca')} 
-                    disabled={!session_id}
-                    className="nationality-kyc-button canada"
-                    title="Check Canada KYC verification"
-                  >
-                    <span className="flag">🇨🇦</span>
-                    <span className="country">Canada</span>
-                  </button>
+                  {/* Canada KYC */}
+                  <div className="endpoint-item">
+                    <div className="endpoint-code">
+                      <span className="method">POST</span>
+                      <span className="url">/ca/verify/kyc</span>
+                    </div>
+                    <button 
+                      onClick={() => handleGetKYC('ca')} 
+                      disabled={!session_id}
+                      className="test-button"
+                    >
+                      Test
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
