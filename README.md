@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# TomoIDV Demo 
 
 ## 프로젝트 clone 후 dependency 설치 
 `docker compose`를 이용하여 container 내부 환경 진입 후 `npm i` 
