@@ -229,7 +229,6 @@ export default function TomoIDVClient() {
                 <div className="api-header">
                   <h4 className="api-title">Base URL</h4>
                 </div>
-                <p className="api-description">Base URL for all APIs</p>
                 <div className="endpoint-item">
                   <div className="endpoint-code">
                     <span className="url">https://test.tomopayment.com/v1</span>
