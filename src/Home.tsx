@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
-import { ConnectionStatus, TomoIDV } from 'tomo-idv-client';
+import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
+// import { ConnectionStatus, TomoIDV } from 'tomo-idv-client';
 import './Home.css';
 
 export default function TomoIDVClient() {
@@ -42,8 +42,22 @@ export default function TomoIDVClient() {
   const handleVerifySession = async () => {
     if (!session_id) return;
     try {
-      const result = await TomoIDV.verifySession(session_id);
-      setVerificationResult(result);
+      const response = await fetch(`https://test.tomopayment.com/v1/verify/session`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ session_id })
+        });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Verify session result:', data);
+      setVerificationResult(data);
     } catch (error) {
       console.error('Session verification failed:', error);
     }
@@ -52,10 +66,25 @@ export default function TomoIDVClient() {
   const handleGetKYC = async () => {
     if (!session_id) return;
     try {
-      const result = await TomoIDV.getResult(session_id);
-      setVerificationResult(result);
+      const response = await fetch(`https://test.tomopayment.com/v1/results`,
+        {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ session_id })
+        });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('KYC result:', JSON.stringify(data, null, 2));
+      setVerificationResult(data);
+      
       // Check if verification is completed based on result
-      if (result && result.status === 'completed') {
+      if (data && data.kycResultKycData_status === 'success') {
         setIsIDVCompleted(true);
       }
     } catch (error) {
