@@ -9,7 +9,7 @@ interface PopupOptions {
   name?: string;
 }
 
-interface UsePopupReturn {
+export interface UsePopupReturn {
   openTomoIDVPopup: (sessionId: string, options?: PopupOptions) => Window | null;
 }
 
