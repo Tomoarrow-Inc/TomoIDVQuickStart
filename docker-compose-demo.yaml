@@ -1,0 +1,25 @@
+services:
+  # 실행 명령어 : dcp test-demo up --build demo
+  demo:
+    build: 
+      context: ./TomoIDVQuickStart
+      dockerfile: Dockerfile
+
+    # 일회성 빌드를 위한 설정
+    restart: "no"
+    
+    # 호스트의 dist 폴더와 연결
+    volumes:
+      - ./TomoIDVQuickStart/dist:/app/dist
+
+    # 빌드 완료 후 자동 종료를 위한 명령어
+    command: >
+      sh -c "
+        echo '🚀 Starting build process...' &&
+        npm run build:static &&
+        echo '✅ Build completed successfully!' &&
+        echo '📁 Build files created in dist folder' &&
+        ls -la dist/ &&
+        echo '🔄 Container will exit now...' &&
+        exit 0
+      "

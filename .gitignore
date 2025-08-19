@@ -161,3 +161,6 @@ yarn-error.log*
 /src/test/
 *.env
 .env*
+
+# vite
+/dist
