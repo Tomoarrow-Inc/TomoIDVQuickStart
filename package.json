@@ -28,7 +28,9 @@
     "build:test": "REACT_APP_ENV=test react-scripts build",
     "build:prod": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:vite": "vite build",
+    "preview:vite": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -50,8 +52,10 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
+    "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "vite": "^4.5.14"
   }
 }
