@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
-import { ConnectionStatus, TomoIDV } from 'tomo-idv-client';
+import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
+// import { ConnectionStatus, TomoIDV } from 'tomo-idv-client';
 import './Home.css';
 
 export default function TomoIDVClient() {
