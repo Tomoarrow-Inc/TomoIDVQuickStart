@@ -7,6 +7,7 @@ export interface Config {
     storeKycEndpoint: string;
     storeJpKycEndpoint: string;
     generateLinkTokenEndpoint: string;
+    assertionAudienceEndpoint: string;
     environment: 'development' | 'test' | 'production';
 }
 
@@ -32,6 +33,7 @@ const getEnvironmentConfig = (): Config => {
         storeKycEndpoint: 'https://test.tomopayment.com/v1/us/store',
         storeJpKycEndpoint: 'https://test.tomopayment.com/v1/jp/store',
         generateLinkTokenEndpoint: 'https://test.tomopayment.com/v1/us/generate_link_token',
+        assertionAudienceEndpoint: 'https://test.tomopayment.com/oauth2/token',
         environment: 'test'
     };
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
-import { ConnectionStatus, TomoIDV } from 'tomo-idv-client';
+// import { ConnectionStatus, TomoIDV, IssueAccessTokenResult } from 'tomo-idv-client';
+import { ConnectionStatus, TomoIDV } from './modules/tomo-idv-client';
 import './Home.css';
 
 export default function TomoIDVClient() {
@@ -9,6 +9,9 @@ export default function TomoIDVClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [isIDVCompleted, setIsIDVCompleted] = useState(false);
+  const [assertionResult, setAssertionResult] = useState<any>(null);
+  const [tokenResult, setTokenResult] = useState<any>(null);
+  const [logs, setLogs] = useState<string[]>([]);
 
   // React Hook calls at the top level
   const { establishConnection } = TomoIDV.useTomoAuth({
@@ -16,6 +19,22 @@ export default function TomoIDVClient() {
     onSessionIdChange: setSessionId
   });
   const { openTomoIDVPopup } = TomoIDV.useTomoIDV();
+  const { createClientAssertion, isLoading: isAssertionLoading } = TomoIDV.useAssertion({
+    onAssertionCreated: (assertion: string) => {
+      console.log('Assertion created:', assertion);
+      setVerificationResult({ assertion });
+    },
+    onError: (error: Error) => {
+      console.error('Assertion creation failed:', error);
+    }
+  });
+
+  // 로그 추가 헬퍼 함수
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString();
+    setLogs(prev => [...prev, `[${timestamp}] ${message}`]);
+    console.log(message);
+  };
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -89,6 +108,93 @@ export default function TomoIDVClient() {
       }
     } catch (error) {
       console.error('KYC retrieval failed:', error);
+    }
+  };
+
+  const handleGetAccessToken = async () => {
+    if (!assertionResult?.assertion) {
+      addLog('❌ No assertion found. Please create assertion first.');
+      setTokenResult({ error: 'No assertion found. Please create assertion first.' });
+      return;
+    }
+
+    try {
+      addLog('🚀 Starting access token request...');
+      
+      const params = new URLSearchParams();
+      params.set('grant_type', 'client_credentials');
+      params.set('scope', 'idv.read');
+      params.set('resource', 'https://test.tomopayment.com');
+      params.set('client_assertion_type', 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer');
+      params.set('client_assertion', assertionResult.assertion);
+      
+      addLog('📝 Request parameters:');
+      addLog(`  grant_type: ${params.get('grant_type')}`);
+      addLog(`  scope: ${params.get('scope')}`);
+      addLog(`  resource: ${params.get('resource')}`);
+      addLog(`  client_assertion_type: ${params.get('client_assertion_type')}`);
+      addLog(`  client_assertion: ${assertionResult.assertion.substring(0, 50)}...`);
+
+      const response = await fetch('https://test.tomopayment.com/v1/oauth2/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          DPoP: 'dpop-proof',
+        },
+        body: params.toString(),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        addLog(`❌ HTTP error! status: ${response.status}`);
+        addLog(`❌ Error message: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+
+      const data = await response.json();
+      addLog('✅ Access token received successfully!');
+      addLog(`📊 Response: ${JSON.stringify(data, null, 2)}`);
+      
+      // app.service.ts와 동일하게 단순하게 토큰 응답만 저장
+      setTokenResult(data);
+      setVerificationResult(data);
+    } catch (error) {
+      addLog(`❌ Access token request failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setTokenResult({ 
+        error: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
+    }
+  };
+
+  const handleCreateClientAssertion = async () => {
+    try {
+      addLog('🔐 Starting client assertion creation...');
+      
+      // 예시 설정 - 실제 사용 시에는 사용자의 private key와 client ID를 입력받아야 함
+      const assertionConfig = {
+        privateKey: 'eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6IkxTbnNFNTlQd3pTWlBwVERGdFpZR3VxMmZuam0tSmV3MVJjMzdyeGplVGMiLCJ5IjoiS3kyNjV4aVR3bWo3eVloMDV2Q3NIVWhBc2RVcm5iVnROY1dFdEpRVnVVVSIsImQiOiJmbnYxN0lYTWxvMFo3MlNwaWE0eWJlTllTSm9TMFNRYjdFaGUyN19YN2xrIn0', // base64Url 인코딩된 JWK
+        clientId: '3855e5678a3c42c1fef97ce3b9948c83' // 실제 클라이언트 ID로 교체 필요
+      };
+      
+      addLog('📝 Assertion configuration:');
+      addLog(`  clientId: ${assertionConfig.clientId}`);
+      addLog(`  privateKey: ${assertionConfig.privateKey.substring(0, 50)}...`);
+      
+      const assertion = await createClientAssertion(assertionConfig);
+      addLog('✅ Client assertion created successfully!');
+      addLog(`🔑 Assertion JWT: ${assertion.substring(0, 100)}...`);
+      
+      // app.service.ts와 동일하게 단순하게 assertion만 저장
+      setAssertionResult({ assertion });
+      setVerificationResult({ assertion });
+      
+      addLog('📋 Next step: Use "Get Access Token" button to request token with this assertion');
+      
+    } catch (error) {
+      addLog(`❌ Client assertion creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setAssertionResult({ 
+        error: error instanceof Error ? error.message : 'Unknown error occurred'
+      });
     }
   };
 
@@ -171,8 +277,13 @@ export default function TomoIDVClient() {
                   disabled={!session_id || isLoading}
                   className="secondary-action-button"
                 >
-                  Start Identity Verification
+                  {isIDVCompleted ? 'IDV Completed ✅' : 'Start Identity Verification'}
                 </button>
+                {isIDVCompleted && (
+                  <div style={{ marginTop: '8px', color: '#10b981', fontSize: '14px' }}>
+                    ✅ Identity verification completed successfully
+                  </div>
+                )}
               </div>
             </div>
 
@@ -184,7 +295,54 @@ export default function TomoIDVClient() {
                   Response Result
                 </h3>
                 <div className="result-content-compact">
-                  {verificationResult ? (
+                  {/* Assertion Result */}
+                  {assertionResult && (
+                    <div className="json-display-compact" style={{ marginBottom: '16px' }}>
+                      <div className="json-header-compact">
+                        <span className="json-type">🔐 Assertion Result</span>
+                        <button 
+                          className="copy-button-compact"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(assertionResult, null, 2));
+                          }}
+                          title="Copy to clipboard"
+                        >
+                          📋 Copy
+                        </button>
+                      </div>
+                      <div className="json-content-compact">
+                        <pre className="result-json-compact">
+                          {JSON.stringify(assertionResult, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Token Result */}
+                  {tokenResult && (
+                    <div className="json-display-compact" style={{ marginBottom: '16px' }}>
+                      <div className="json-header-compact">
+                        <span className="json-type">🎫 Token Result</span>
+                        <button 
+                          className="copy-button-compact"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(tokenResult, null, 2));
+                          }}
+                          title="Copy to clipboard"
+                        >
+                          📋 Copy
+                        </button>
+                      </div>
+                      <div className="json-content-compact">
+                        <pre className="result-json-compact">
+                          {JSON.stringify(tokenResult, null, 2)}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Other API Results */}
+                  {verificationResult && !assertionResult && !tokenResult && (
                     <div className="json-display-compact">
                       <div className="json-header-compact">
                         <span className="json-type">JSON Response</span>
@@ -204,7 +362,46 @@ export default function TomoIDVClient() {
                         </pre>
                       </div>
                     </div>
-                  ) : (
+                  )}
+
+                  {/* Logs */}
+                  {logs.length > 0 && (
+                    <div className="json-display-compact" style={{ marginTop: '16px' }}>
+                      <div className="json-header-compact">
+                        <span className="json-type">📝 Process Logs</span>
+                        <button 
+                          className="copy-button-compact"
+                          onClick={() => {
+                            navigator.clipboard.writeText(logs.join('\n'));
+                          }}
+                          title="Copy logs to clipboard"
+                        >
+                          📋 Copy
+                        </button>
+                      </div>
+                      <div className="json-content-compact">
+                        <div style={{ 
+                          backgroundColor: '#1a1a1a', 
+                          color: '#00ff00', 
+                          fontFamily: 'monospace', 
+                          fontSize: '12px',
+                          padding: '12px',
+                          borderRadius: '4px',
+                          maxHeight: '200px',
+                          overflowY: 'auto'
+                        }}>
+                          {logs.map((log, index) => (
+                            <div key={index} style={{ marginBottom: '4px' }}>
+                              {log}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* No Results */}
+                  {!verificationResult && !assertionResult && !tokenResult && logs.length === 0 && (
                     <div className="no-result-compact">
                       <div className="no-result-icon">{"{ }"}</div>
                       <div className="no-result-text">
@@ -332,6 +529,48 @@ export default function TomoIDVClient() {
                       Test
                     </button>
                   </div>
+                </div>
+              </div>
+              
+              {/* Get Access Token */}
+              <div className="api-section">
+                <div className="api-header">
+                  <h4 className="api-title">Get Access Token (with Assertion)</h4>
+                  <p className="api-description">Uses created assertion to request access token from OAuth2 endpoint</p>
+                </div>
+                <div className="endpoint-item">
+                  <div className="endpoint-code">
+                    <span className="method">POST</span>
+                    <span className="url">/v1/oauth2/token</span>
+                  </div>
+                  <button 
+                    onClick={handleGetAccessToken} 
+                    disabled={!assertionResult?.assertion}
+                    className="test-button"
+                  >
+                    {!assertionResult?.assertion ? 'Need Assertion' : 'Test'}
+                  </button>
+                </div>
+              </div>
+              
+              {/* Issue Client Credentials Token */}
+              <div className="api-section">
+                <div className="api-header">
+                  <h4 className="api-title">Create Client Assertion</h4>
+                  <p className="api-description">Creates JWT assertion for client credentials flow. SDK only creates assertion - you must make actual token request yourself to https://test.tomopayment.com/v1/oauth2/token</p>
+                </div>
+                <div className="endpoint-item">
+                  <div className="endpoint-code">
+                    <span className="method">POST</span>
+                    <span className="url">/oauth2/token</span>
+                  </div>
+        <button
+          onClick={handleCreateClientAssertion}
+          disabled={isAssertionLoading}
+          className="test-button"
+        >
+          {isAssertionLoading ? 'Creating...' : 'Create Assertion'}
+        </button>
                 </div>
               </div>
             </div>
