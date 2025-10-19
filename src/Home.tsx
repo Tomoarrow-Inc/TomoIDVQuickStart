@@ -111,14 +111,31 @@ export default function TomoIDVClient() {
     }
   };
 
-  const handleGetAccessToken = async () => {
-    if (!assertionResult?.assertion) {
-      addLog('❌ No assertion found. Please create assertion first.');
-      setTokenResult({ error: 'No assertion found. Please create assertion first.' });
-      return;
-    }
 
+  const handleCreateClientAssertion = async () => {
     try {
+      addLog('🔐 Starting client assertion creation...');
+      
+      // 예시 설정 - 실제 사용 시에는 사용자의 private key와 client ID를 입력받아야 함
+      const assertionConfig = {
+        privateKey: 'eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6IkxTbnNFNTlQd3pTWlBwVERGdFpZR3VxMmZuam0tSmV3MVJjMzdyeGplVGMiLCJ5IjoiS3kyNjV4aVR3bWo3eVloMDV2Q3NIVWhBc2RVcm5iVnROY1dFdEpRVnVVVSIsImQiOiJmbnYxN0lYTWxvMFo3MlNwaWE0eWJlTllTSm9TMFNRYjdFaGUyN19YN2xrIn0', // base64Url 인코딩된 JWK
+        clientId: '3855e5678a3c42c1fef97ce3b9948c83' // 실제 클라이언트 ID로 교체 필요
+      };
+      
+      addLog('📝 Assertion configuration:');
+      addLog(`  clientId: ${assertionConfig.clientId}`);
+      addLog(`  privateKey: ${assertionConfig.privateKey.substring(0, 50)}...`);
+      
+      // Step 1: Create assertion
+      const assertion = await createClientAssertion(assertionConfig);
+      addLog('✅ Client assertion created successfully!');
+      addLog(`🔑 Assertion JWT: ${assertion.substring(0, 100)}...`);
+      
+      // app.service.ts와 동일하게 단순하게 assertion만 저장
+      setAssertionResult({ assertion });
+      setVerificationResult({ assertion });
+      
+      // Step 2: Immediately request access token with the created assertion
       addLog('🚀 Starting access token request...');
       
       const params = new URLSearchParams();
@@ -126,22 +143,24 @@ export default function TomoIDVClient() {
       params.set('scope', 'idv.read');
       params.set('resource', 'https://test.tomopayment.com');
       params.set('client_assertion_type', 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer');
-      params.set('client_assertion', assertionResult.assertion);
+      params.set('client_assertion', assertion);
       
       addLog('📝 Request parameters:');
+      addLog(`  endpoint: https://test.tomopayment.com/v1/oauth2/token`);
       addLog(`  grant_type: ${params.get('grant_type')}`);
       addLog(`  scope: ${params.get('scope')}`);
       addLog(`  resource: ${params.get('resource')}`);
       addLog(`  client_assertion_type: ${params.get('client_assertion_type')}`);
-      addLog(`  client_assertion: ${assertionResult.assertion.substring(0, 50)}...`);
+      addLog(`  client_assertion: ${assertion.substring(0, 50)}...`);
+      addLog(`  assertion length: ${assertion.length} chars`);
 
       const response = await fetch('https://test.tomopayment.com/v1/oauth2/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          DPoP: 'dpop-proof',
+          DPoP: 'dpop-proof', // CORS Preflight을 트리거할 수 있으므로 제거
         },
-        body: params.toString(),
+        body: params.toString()
       });
 
       if (!response.ok) {
@@ -158,40 +177,11 @@ export default function TomoIDVClient() {
       // app.service.ts와 동일하게 단순하게 토큰 응답만 저장
       setTokenResult(data);
       setVerificationResult(data);
-    } catch (error) {
-      addLog(`❌ Access token request failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      setTokenResult({ 
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
-      });
-    }
-  };
-
-  const handleCreateClientAssertion = async () => {
-    try {
-      addLog('🔐 Starting client assertion creation...');
       
-      // 예시 설정 - 실제 사용 시에는 사용자의 private key와 client ID를 입력받아야 함
-      const assertionConfig = {
-        privateKey: 'eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6IkxTbnNFNTlQd3pTWlBwVERGdFpZR3VxMmZuam0tSmV3MVJjMzdyeGplVGMiLCJ5IjoiS3kyNjV4aVR3bWo3eVloMDV2Q3NIVWhBc2RVcm5iVnROY1dFdEpRVnVVVSIsImQiOiJmbnYxN0lYTWxvMFo3MlNwaWE0eWJlTllTSm9TMFNRYjdFaGUyN19YN2xrIn0', // base64Url 인코딩된 JWK
-        clientId: '3855e5678a3c42c1fef97ce3b9948c83' // 실제 클라이언트 ID로 교체 필요
-      };
-      
-      addLog('📝 Assertion configuration:');
-      addLog(`  clientId: ${assertionConfig.clientId}`);
-      addLog(`  privateKey: ${assertionConfig.privateKey.substring(0, 50)}...`);
-      
-      const assertion = await createClientAssertion(assertionConfig);
-      addLog('✅ Client assertion created successfully!');
-      addLog(`🔑 Assertion JWT: ${assertion.substring(0, 100)}...`);
-      
-      // app.service.ts와 동일하게 단순하게 assertion만 저장
-      setAssertionResult({ assertion });
-      setVerificationResult({ assertion });
-      
-      addLog('📋 Next step: Use "Get Access Token" button to request token with this assertion');
+      addLog('🎉 Complete! Assertion created and access token obtained successfully!');
       
     } catch (error) {
-      addLog(`❌ Client assertion creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      addLog(`❌ Process failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setAssertionResult({ 
         error: error instanceof Error ? error.message : 'Unknown error occurred'
       });
@@ -532,45 +522,24 @@ export default function TomoIDVClient() {
                 </div>
               </div>
               
-              {/* Get Access Token */}
+              {/* Create Assertion & Get Access Token (Combined) */}
               <div className="api-section">
                 <div className="api-header">
-                  <h4 className="api-title">Get Access Token (with Assertion)</h4>
-                  <p className="api-description">Uses created assertion to request access token from OAuth2 endpoint</p>
+                  <h4 className="api-title">Create Assertion & Get Access Token</h4>
+                  <p className="api-description">Creates JWT assertion and immediately requests access token from OAuth2 endpoint. This combines both steps into one operation.</p>
                 </div>
                 <div className="endpoint-item">
                   <div className="endpoint-code">
                     <span className="method">POST</span>
-                    <span className="url">/v1/oauth2/token</span>
+                    <span className="url">/oauth2/token → /v1/oauth2/token</span>
                   </div>
-                  <button 
-                    onClick={handleGetAccessToken} 
-                    disabled={!assertionResult?.assertion}
+                  <button
+                    onClick={handleCreateClientAssertion}
+                    disabled={isAssertionLoading}
                     className="test-button"
                   >
-                    {!assertionResult?.assertion ? 'Need Assertion' : 'Test'}
+                    {isAssertionLoading ? 'Processing...' : 'Create & Get Token'}
                   </button>
-                </div>
-              </div>
-              
-              {/* Issue Client Credentials Token */}
-              <div className="api-section">
-                <div className="api-header">
-                  <h4 className="api-title">Create Client Assertion</h4>
-                  <p className="api-description">Creates JWT assertion for client credentials flow. SDK only creates assertion - you must make actual token request yourself to https://test.tomopayment.com/v1/oauth2/token</p>
-                </div>
-                <div className="endpoint-item">
-                  <div className="endpoint-code">
-                    <span className="method">POST</span>
-                    <span className="url">/oauth2/token</span>
-                  </div>
-        <button
-          onClick={handleCreateClientAssertion}
-          disabled={isAssertionLoading}
-          className="test-button"
-        >
-          {isAssertionLoading ? 'Creating...' : 'Create Assertion'}
-        </button>
                 </div>
               </div>
             </div>
